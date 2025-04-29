@@ -132,3 +132,47 @@ describe('GET /api/articles', () => {
   });
 
 });
+
+describe('GET /api/articles/:article_id/comments', () => {
+  test('200: returns an array of comments for the given article_id with correct properties', () => {
+    return request(app)
+      .get('/api/articles/1/comments')
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(Array.isArray(comments)).toBe(true);
+        comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              article_id: 1
+            })
+          );
+        });
+      });
+  });
+
+  test('comments are sorted by created_at in descending order', () => {
+    return request(app)
+      .get('/api/articles/1/comments')
+      .expect(200)
+      .then(({ body }) => {
+        const dates = body.comments.map((c) => new Date(c.created_at));
+        const sorted = [...dates].sort((a, b) => b - a);
+        expect(dates).toEqual(sorted);
+      });
+  });
+
+  test('400: responds with "Invalid article ID" if article_id is not a number', () => {
+    return request(app)
+      .get('/api/articles/not-a-number/comments')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Invalid article ID');
+      });
+  });
+});
