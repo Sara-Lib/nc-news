@@ -1,17 +1,17 @@
 const endpoints = require('../../endpoints.json');
-const { selectTopics, selectArticleById } = require('../../models/news.model');
+const { selectTopics, selectArticleById, selectAllArticles } = require('../../models/news.model');
 
 const getApiDocumentation = (req, res) => {
-    res.status(200).send({ endpoints });
+    res.status(200).send({endpoints});
   };
 
 const getTopics = (req, res, next) => {
   selectTopics()
     .then((topics) => {
-      res.status(200).send({ topics });
+      res.status(200).send({topics});
     })
     .catch(next);
-    //this is where we catch errors!
+    //this is where we catch errors! not in the model
 };
 
 const getArticleById = (req, res, next) => {
@@ -22,13 +22,24 @@ const getArticleById = (req, res, next) => {
         if (!article) {
             return Promise.reject({ status: 404, msg: 'Article not found' });
           }
-        res.status(200).send({ article });
+        res.status(200).send({article});
       })
       .catch(next);
   };
 
+
+  const getArticles = (req, res, next) => {
+    selectAllArticles()
+      .then((articles) => {
+        res.status(200).send({articles});
+      })
+      .catch(next);
+  };
+
+
 module.exports = {
   getApiDocumentation,
   getTopics,
-  getArticleById
+  getArticleById,
+  getArticles
 };
