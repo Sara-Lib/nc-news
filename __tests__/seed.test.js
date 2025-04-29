@@ -587,6 +587,7 @@ describe('data insertion', () => {
     return db.query(`SELECT * FROM comments;`).then(({ rows: comments }) => {
       expect(comments).toHaveLength(18);
       comments.forEach((comment) => {
+        expect(typeof comment.article_id).toBe("number");
         expect(comment).toHaveProperty('comment_id');
         expect(comment).toHaveProperty('body');
         expect(comment).toHaveProperty('article_id');
@@ -599,3 +600,46 @@ describe('data insertion', () => {
 });
 
 
+// test('correct number of users inserted', () => {
+//   return db.query(`SELECT * FROM users;`).then(({ rows }) => {
+//     expect(rows).toHaveLength(4); // replace with your actual number
+//   });
+// });
+
+// test('correct number of articles inserted', () => {
+//   return db.query(`SELECT * FROM articles;`).then(({ rows }) => {
+//     expect(rows).toHaveLength(12); 
+//   });
+// });
+
+// test('correct number of topics inserted', () => {
+//   return db.query(`SELECT * FROM topics;`).then(({ rows }) => {
+//     expect(rows).toHaveLength(3); 
+//   });
+// });
+
+// test('users table contains correct data', () => {
+//   return db.query(`SELECT * FROM users;`)
+//     .then(({ rows }) => {
+//       expect(rows[0]).toHaveProperty('username', 'user1');
+//       expect(rows[0]).toHaveProperty('name', 'John Doe');
+//       expect(rows[0]).toHaveProperty('avatar_url', 'http://example.com/avatar1.jpg');
+//     });
+// });
+
+// test('articles table contains correct data', () => {
+//   return db.query(`SELECT * FROM articles;`)
+//     .then(({ rows }) => {
+//       expect(rows[0]).toHaveProperty('title', 'An interesting article');
+//       expect(rows[0]).toHaveProperty('topic', 'tech');
+//       expect(rows[0]).toHaveProperty('author', 'user1');
+//     });
+// });
+
+// test('comments table contains correct data', () => {
+//   return db.query(`SELECT * FROM comments;`)
+//     .then(({ rows }) => {
+//       expect(rows[0]).toHaveProperty('body', 'This is a comment.');
+//       expect(rows[0]).toHaveProperty('author', 'user2');
+//     });
+// });
