@@ -11,7 +11,7 @@ const getTopics = (req, res, next) => {
       res.status(200).send({ topics });
     })
     .catch(next);
-    //this is where we catch errors
+    //this is where we catch errors!
 };
 
 module.exports = {
