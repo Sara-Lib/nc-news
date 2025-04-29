@@ -1,11 +1,11 @@
 const db = require("../db/connection")
 
-const selectTopics = (next) => {
+const selectTopics = () => {
     return db.query('SELECT slug, description FROM topics;')
       .then((result) => {
         return result.rows;
       })
-      .catch(next);
   };
+  //no need for catch (next ) here, its in the controller
   
   module.exports = { selectTopics };
