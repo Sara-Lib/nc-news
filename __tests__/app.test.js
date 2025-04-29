@@ -5,7 +5,6 @@ const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data")
 const db = require("../db/connection")
 const request = require("supertest")
-// const treasureData = require("../db/data/test-data/treasures")
 /* Set up your beforeEach & afterAll functions here */
 
 
@@ -41,6 +40,46 @@ describe("GET /api/topics", () => {
             })
           );
         });
+      });
+  });
+});
+
+describe('GET /api/articles/:article_id', () => {
+  test('200: returns article with all correct fields', () => {
+    return request(app)
+      .get('/api/articles/1')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: 1,
+            body: expect.any(String),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+          })
+        );
+      });
+  });
+
+  test('404: article not found', () => {
+    return request(app)
+      .get('/api/articles/9999')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Article not found');
+      });
+  });
+
+  test('400: invalid ID format', () => {
+    return request(app)
+      .get('/api/articles/not-an-id')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Invalid article ID');
       });
   });
 });
