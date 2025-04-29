@@ -37,5 +37,23 @@ const selectTopics = () => {
       return rows;
     });
   };
+
+  const selectCommentsByArticleId = (article_id) => {
+    if (isNaN(Number(article_id))) {
+        return Promise.reject({ status:400, msg:"Invalid article ID"})
+    }
+
+    return db.query(`
+        SELECT comment_id, votes, created_at, author, body, article_id
+        FROM comments
+        WHERE article_id = $1
+        ORDER BY created_at DESC;
+        `,
+        [article_id]
+
+    )
+    .then(({rows}) => rows);
+
+  };
   
-  module.exports = { selectTopics, selectArticleById, selectAllArticles };
+  module.exports = { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId};

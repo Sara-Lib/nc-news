@@ -38,8 +38,23 @@
       "article_img_url": "https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?w=700&h=700"
     }
   }
-}
+},
 
+"/api/articles/:article_id/comments": {
+  "description": "retrieves an array of comments for a given article ID, starting with the newest",
+  "queries": [],
+  "exampleResponse": {
+    "comments": [
+      {
+        "article_title": "Making sense of Redux",
+        "body": "Nobis consequatur animi. Ullam nobis quaerat voluptates veniam.",
+        "votes": 7,
+        "author": "grumpy19",
+        "created_at": 1577890920000
+      }
+    ]
+  }
+}
 
 
 }
