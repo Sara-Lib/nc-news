@@ -92,7 +92,17 @@
       "article_img_url": "https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?w=700&h=700"
     }
   }
+},
+
+"DELETE /api/comments/:comment_id": {
+  "description": "Deletes a comment by its comment_id.",
+  "responses": {
+    "204": "No content – comment successfully deleted",
+    "400": "Bad request – invalid comment_id",
+    "404": "Not found – comment_id does not exist"
+  }
 }
+
 
 
 }

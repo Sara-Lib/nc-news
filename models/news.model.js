@@ -105,7 +105,29 @@ const insertComment = (article_id, username, body) => {
                 return Promise.reject({ status: 404, msg: 'Article not found' });
               }
         })
-  }
+    };
+    
+    const deleteCommentById = (comment_id) => {
+        return db.query(`
+            DELETE FROM comments
+            WHERE comment_id = $1
+            RETURNING *;
+            `,
+            [comment_id]
+        )
+        .then(({rows}) => {
+            if (rows.length === 0) {
+                return Promise.reject({ status: 404, msg: 'Comment not found' });
+            }
+            return rows[0]; //I think I don't need it here?
+        })
+        .catch((err) => {
+            if (err.code === '22P02') {
+                return Promise.reject({ status: 400, msg: 'Invalid comment ID' });
+              }
+              return Promise.reject(err);
+        });
+  };
 
   
-  module.exports = { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId, insertComment, updateArticleVotesById};
+  module.exports = { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId, insertComment, updateArticleVotesById, deleteCommentById};
