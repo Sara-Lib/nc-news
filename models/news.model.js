@@ -78,5 +78,34 @@ const insertComment = (article_id, username, body) => {
         })
   };
 
+  const updateArticleVotesById = (article_id, inc_votes) => {
+         if (isNaN(Number(article_id))) {
+        return Promise.reject({ status: 400, msg: 'Invalid article ID' });
+         }
+         if (typeof inc_votes !== 'number') {
+        return Promise.reject({ status: 400, msg: 'Missing or invalid inc_votes' });
+         }
+
+        return db.query(`
+            UPDATE articles
+            SET votes = votes + $1
+            WHERE article_id = $2
+            RETURNING *;
+        `,
+        [inc_votes, article_id]
+        )
+        .then(({ rows }) => {
+            if (rows.length === 0) {
+                return Promise.reject({ status: 404, msg: 'Article not found' });
+            }
+            return rows[0]
+        })
+        .catch((err) => {
+            if (err.code === '23503') {
+                return Promise.reject({ status: 404, msg: 'Article not found' });
+              }
+        })
+  }
+
   
-  module.exports = { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId, insertComment};
+  module.exports = { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId, insertComment, updateArticleVotesById};

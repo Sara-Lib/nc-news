@@ -1,5 +1,6 @@
+const { articleData } = require('../../db/data/test-data');
 const endpoints = require('../../endpoints.json');
-const { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId, insertComment } = require('../../models/news.model');
+const { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId, insertComment, updateArticleVotesById } = require('../../models/news.model');
 const { use } = require('../api');
 
 const getApiDocumentation = (req, res) => {
@@ -55,7 +56,21 @@ const getArticleById = (req, res, next) => {
         .then((comment) => {
             res.status(201).send(({ comment }));
         })
-      .catch(next);
+        .catch(next);
+    };
+    
+    const patchArticleVotes = (req, res, next) => {
+      const {article_id} = req.params;
+      const {inc_votes} = req.body;
+
+    updateArticleVotesById(article_id, inc_votes)
+        .then((updatedArticle) => {
+            if (!updatedArticle) {
+                return res.status(404).send({ msg: 'Article not found' });
+              }
+            res.status(200).send({ article: updatedArticle });
+        })
+        .catch(next);
   };
 
 
@@ -65,5 +80,6 @@ module.exports = {
   getArticleById,
   getArticles,
   getCommentsByArticleId,
-  postComment
+  postComment,
+  patchArticleVotes
 };
