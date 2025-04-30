@@ -23,7 +23,7 @@ describe("GET /api", () => {
 });
 
 describe("GET /api/topics", () => {
-  it("200: responds with an array of topic objects, each with slug and description", () => {
+  test("200: responds with an array of topic objects, each with slug and description", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
@@ -321,6 +321,29 @@ describe('DELETE /api/comments/:comment_id', () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe('Comment not found');
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("200: responds with an array of user objects, each with username, name, and avatar_url", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        const { users } = body;
+        expect(Array.isArray(users)).toBe(true);
+        expect(users.length).toBeGreaterThan(0);
+
+        users.forEach((user) => {
+          expect(user).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String)
+            })
+          );
+        });
       });
   });
 });
