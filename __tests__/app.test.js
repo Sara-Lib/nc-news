@@ -176,3 +176,60 @@ describe('GET /api/articles/:article_id/comments', () => {
       });
   });
 });
+
+describe('POST /api/articles/:article_id/comments', () => {
+  test('201: posts a new comment and responds with the comment', () => {
+    const newComment = {
+      username: 'icellusedkars',
+      body: 'This article is amazing!'
+    };
+
+    return request(app)
+      .post('/api/articles/1/comments')
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(comment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            body: 'This article is amazing!',
+            author: 'icellusedkars',
+            article_id: 1,
+            created_at: expect.any(String),
+            votes: 0
+          })
+        );
+      });
+  });
+
+  test('400: missing required fields (username or body)', () => {
+    return request(app)
+      .post('/api/articles/1/comments')
+      .send({ username: 'jessjelly' }) // missing body
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Missing required fields');
+      });
+  });
+
+  test('404: non-existent article ID', () => {
+    return request(app)
+      .post('/api/articles/9999/comments')
+      .send({ username: 'jessjelly', body: 'Nice!' })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Article not found');
+      });
+  });
+
+  test('400: invalid article ID', () => {
+    return request(app)
+      .post('/api/articles/jelly/comments')
+      .send({ username: 'jessjelly', body: 'Nice!' })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Invalid article ID');
+      });
+  });
+});

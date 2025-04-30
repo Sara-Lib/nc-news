@@ -40,7 +40,7 @@
   }
 },
 
-"/api/articles/:article_id/comments": {
+" GET /api/articles/:article_id/comments": {
   "description": "retrieves an array of comments for a given article ID, starting with the newest",
   "queries": [],
   "exampleResponse": {
@@ -54,7 +54,25 @@
       }
     ]
   }
-}
+},
 
+"POST /api/articles/:article_id/comments": {
+  "description": "Adds a new comment to the article with the specified article_id.",
+  "queries": [],
+  "request body": {
+    "username": "String - the username of the commenter",
+    "body": "String - the text content of the comment"
+  },
+  "response": {
+    "comment": {
+      "comment_id": "Integer",
+      "votes": "Integer",
+      "created_at": "Timestamp",
+      "author": "String",
+      "body": "String",
+      "article_id": "Integer"
+    }
+  }
+}
 
 }

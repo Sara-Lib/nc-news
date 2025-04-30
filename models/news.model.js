@@ -42,7 +42,7 @@ const selectTopics = () => {
     if (isNaN(Number(article_id))) {
         return Promise.reject({ status:400, msg:"Invalid article ID"})
     }
-
+    
     return db.query(`
         SELECT comment_id, votes, created_at, author, body, article_id
         FROM comments
@@ -50,10 +50,33 @@ const selectTopics = () => {
         ORDER BY created_at DESC;
         `,
         [article_id]
-
+        
     )
     .then(({rows}) => rows);
+};
 
+const insertComment = (article_id, username, body) => {
+      if (isNaN(Number(article_id))) {
+          return Promise.reject({ status:400, msg:"Invalid article ID"})
+      }
+    if (!body || !username) {
+        return Promise.reject({ status: 400, msg: 'Missing required fields' });
+      }
+    
+      return db.query(`
+          INSERT INTO comments (author, body, article_id)
+          VALUES ($1, $2, $3)
+          RETURNING *;
+        `,
+          [username, body, article_id]
+        )
+        .then(({ rows }) => rows[0])
+        .catch((err) => {
+            if (err.code === '23503') {
+                return Promise.reject({ status: 404, msg: 'Article not found' });
+              }
+        })
   };
+
   
-  module.exports = { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId};
+  module.exports = { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId, insertComment};
