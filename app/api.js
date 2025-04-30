@@ -1,6 +1,6 @@
 const express = require("express");
 const db = require("../db/connection");
-const { getApiDocumentation, getTopics, getArticleById, getArticles, getCommentsByArticleId, postComment, patchArticleVotes,removeComment } = require('./controllers/news.controller');
+const { getApiDocumentation, getTopics, getArticleById, getArticles, getCommentsByArticleId, postComment, patchArticleVotes,removeComment, getUsers } = require('./controllers/news.controller');
 
 const app = express()
 app.use(express.json())
@@ -13,6 +13,7 @@ app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
 app.post('/api/articles/:article_id/comments', postComment);
 app.patch('/api/articles/:article_id', patchArticleVotes);
 app.delete('/api/comments/:comment_id', removeComment);
+app.get('/api/users', getUsers);
 
 app.use((err, req, res, next) => {
     if (err.status && err.msg) {

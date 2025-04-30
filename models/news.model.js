@@ -78,7 +78,7 @@ const insertComment = (article_id, username, body) => {
         })
   };
 
-  const updateArticleVotesById = (article_id, inc_votes) => {
+const updateArticleVotesById = (article_id, inc_votes) => {
          if (isNaN(Number(article_id))) {
         return Promise.reject({ status: 400, msg: 'Invalid article ID' });
          }
@@ -107,7 +107,7 @@ const insertComment = (article_id, username, body) => {
         })
     };
     
-    const deleteCommentById = (comment_id) => {
+const deleteCommentById = (comment_id) => {
         return db.query(`
             DELETE FROM comments
             WHERE comment_id = $1
@@ -129,5 +129,18 @@ const insertComment = (article_id, username, body) => {
         });
   };
 
+  const selectAllUsers = () => {
+    return db.query(`
+        SELECT * FROM users;
+        `)
+        .then(({ rows }) => {
+            if (rows.length === 0) {
+                return Promise.reject({ status: 404, msg: 'User not found' });
+            }
+            return rows;
+        })
+        .catch();
+  };
+
   
-  module.exports = { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId, insertComment, updateArticleVotesById, deleteCommentById};
+  module.exports = { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId, insertComment, updateArticleVotesById, deleteCommentById, selectAllUsers};

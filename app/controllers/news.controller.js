@@ -1,6 +1,6 @@
 const { articleData } = require('../../db/data/test-data');
 const endpoints = require('../../endpoints.json');
-const { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId, insertComment, updateArticleVotesById, deleteCommentById} = require('../../models/news.model');
+const { selectTopics, selectArticleById, selectAllArticles, selectCommentsByArticleId, insertComment, updateArticleVotesById, deleteCommentById, selectAllUsers} = require('../../models/news.model');
 const { use } = require('../api');
 
 const getApiDocumentation = (req, res) => {
@@ -83,6 +83,14 @@ const getArticleById = (req, res, next) => {
         .catch(next);
   };
 
+  const getUsers = (req, res, next) => {
+    selectAllUsers()
+        .then((users) => {
+            res.status(200).send({users});
+        })
+        .catch(next);
+  };
+
 
 module.exports = {
   getApiDocumentation,
@@ -92,5 +100,6 @@ module.exports = {
   getCommentsByArticleId,
   postComment,
   patchArticleVotes,
-  removeComment
+  removeComment,
+  getUsers
 };
