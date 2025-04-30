@@ -295,3 +295,32 @@ describe('PATCH /api/articles/:article_id', () => {
       });
   });
 });
+
+describe('DELETE /api/comments/:comment_id', () => {
+  test('204: deletes the given comment and responds with no content', () => {
+    return request(app)
+      .delete('/api/comments/1')
+      .expect(204)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
+  });
+
+  test('400: responds with bad request for invalid comment_id', () => {
+    return request(app)
+      .delete('/api/comments/not-a-number')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Invalid comment ID');
+      });
+  });
+
+  test('404: responds with not found for valid but non-existent comment_id', () => {
+    return request(app)
+      .delete('/api/comments/78901')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Comment not found');
+      });
+  });
+});
