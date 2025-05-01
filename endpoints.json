@@ -26,7 +26,11 @@
   },
 
   "GET /api/articles?sort_by=author&order=asc": {
-  "description": "Returns articles sorted by the 'author' column in ascending order. You can replace 'author' with any valid column (e.g., 'title', 'votes', 'created_at') and change 'asc' to 'desc' to reverse the order."
+  "description": "retrieves articles sorted by the 'author' column in ascending order. You can replace 'author' with any valid column (e.g., 'title', 'votes', 'created_at') and change 'asc' to 'desc' to reverse the order"
+},
+
+"GET /api/articles?topic=cooking": {
+  "description": "retrieves articles filtered by the 'topic' query (e.g., 'cooking'). If the topic query is provided, only articles with the matching topic will be returned. If omitted, all articles are returned"
 },
 
 "GET /api/articles/:article_id": {
