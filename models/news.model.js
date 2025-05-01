@@ -27,7 +27,7 @@ const selectTopics = () => {
 
   //you can set the default optipon in the () of the callback fn!!
   //they are added if there are no arguments
-  const selectAllArticles = (sort_by = "created_at", order = "DESC") => {
+  const selectAllArticles = (topic = null, sort_by = "created_at", order = "DESC") => {
 
     if (!sortByOptions.includes(sort_by)) {
       return Promise.reject({status: 400, msg: "Invalid sort_by option"})
@@ -37,15 +37,22 @@ const selectTopics = () => {
       return Promise.reject({status: 400, msg: "Invalid order option"})
     }
 
-    const queryStr = `
+    let queryStr = `
       SELECT articles.author, articles.title, articles.article_id, articles.topic,
              articles.created_at, articles.votes, articles.article_img_url,
              COUNT(comments.comment_id)::INT AS comment_count
       FROM articles
       LEFT JOIN comments ON comments.article_id = articles.article_id
       GROUP BY articles.article_id
-      ORDER BY ${sort_by} ${order.toUpperCase()};
-    `;
+      `;
+      
+      if (topic) {
+        queryStr += `WHERE articles.topic = $1`
+      }
+      
+      queryStr += 
+              ` ORDER BY ${sort_by} ${order.toUpperCase()};`
+
   //use ::INT to cast as int quickly like with CAST(), otherwise it will be a string
     return db.query(queryStr).then(({ rows }) => {
       return rows;

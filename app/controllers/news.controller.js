@@ -30,9 +30,9 @@ const getArticleById = (req, res, next) => {
     
     
     const getArticles = (req, res, next) => {
-      const {sort_by, order} = req.query;
+      const {topic, sort_by, order} = req.query;
 
-        selectAllArticles(sort_by, order)
+        selectAllArticles(topic, sort_by, order)
         .then((articles) => {
             res.status(200).send({articles});
         })
