@@ -13,7 +13,6 @@ const getTopics = (req, res, next) => {
       res.status(200).send({topics});
     })
     .catch(next);
-    //this is where we catch errors! not in the model
 };
 
 const getArticleById = (req, res, next) => {
@@ -31,7 +30,9 @@ const getArticleById = (req, res, next) => {
     
     
     const getArticles = (req, res, next) => {
-        selectAllArticles()
+      const {sort_by, order} = req.query;
+
+        selectAllArticles(sort_by, order)
         .then((articles) => {
             res.status(200).send({articles});
         })
