@@ -1,4 +1,4 @@
-const app = require("./api")
+const app = require("./app/api")
 
 const { PORT = 9090 } = process.env;
 
